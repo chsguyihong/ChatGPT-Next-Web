@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import styles from "./home.module.scss";
 
@@ -27,6 +27,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useMobileScreen } from "../utils";
 import dynamic from "next/dynamic";
 import { showToast } from "./ui-lib";
+import { PersonalCenterPopup } from "./personal-center";
 
 const ChatList = dynamic(async () => (await import("./chat-list")).ChatList, {
   loading: () => null,
@@ -112,6 +113,8 @@ export function SideBar(props: { className?: string }) {
 
   useHotKey();
 
+  const [showPersonalCenter, setPersonalCenter] = useState(false);
+
   return (
     <div
       className={`${styles.sidebar} ${props.className} ${
@@ -126,23 +129,6 @@ export function SideBar(props: { className?: string }) {
         <div className={styles["sidebar-logo"] + " no-dark"}>
           <ChatGptIcon />
         </div>
-      </div>
-
-      <div className={styles["sidebar-header-bar"]}>
-        <IconButton
-          icon={<MaskIcon />}
-          text={shouldNarrow ? undefined : Locale.Mask.Name}
-          className={styles["sidebar-bar-button"]}
-          onClick={() => navigate(Path.NewChat, { state: { fromHome: true } })}
-          shadow
-        />
-        <IconButton
-          icon={<PluginIcon />}
-          text={shouldNarrow ? undefined : Locale.Plugin.Name}
-          className={styles["sidebar-bar-button"]}
-          onClick={() => showToast(Locale.WIP)}
-          shadow
-        />
       </div>
 
       <div
@@ -168,16 +154,24 @@ export function SideBar(props: { className?: string }) {
               }}
             />
           </div>
+
           <div className={styles["sidebar-action"]}>
-            <Link to={Path.Settings}>
-              <IconButton icon={<SettingsIcon />} shadow />
-            </Link>
+            <IconButton
+              icon={<GithubIcon />}
+              shadow
+              onClick={() => setPersonalCenter(true)}
+            />
           </div>
-          <div className={styles["sidebar-action"]}>
-            <a href={REPO_URL} target="_blank">
-              <IconButton icon={<GithubIcon />} shadow />
-            </a>
-          </div>
+          <PersonalCenterPopup
+            open={showPersonalCenter}
+            onClose={() => setPersonalCenter(false)}
+            content={[
+              { id: 1, icon: <SettingsIcon />, label: "账号" },
+              { id: 2, icon: <AddIcon />, label: "余额" },
+              { id: 3, icon: <MaskIcon />, label: "收藏" },
+              { id: 4, icon: <PluginIcon />, label: "设置" },
+            ]}
+          ></PersonalCenterPopup>
         </div>
         <div>
           <IconButton

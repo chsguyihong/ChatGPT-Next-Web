@@ -13,6 +13,9 @@ export enum Path {
   Settings = "/settings",
   NewChat = "/new-chat",
   Masks = "/masks",
+  Account = "/account",
+  Balance = "/balance",
+  Collect = "/collect",
 }
 
 export enum SlotID {
