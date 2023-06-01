@@ -1,5 +1,4 @@
 @mixin container {
-  background-color: var(--white);
   border: var(--border-in-light);
   border-radius: 20px;
   box-shadow: var(--shadow);
@@ -15,6 +14,10 @@
 
   width: var(--window-width);
   height: var(--window-height);
+
+  background-image: var(--background-image);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
 }
 
 .container {

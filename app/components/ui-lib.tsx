@@ -224,7 +224,7 @@ export function Input(props: InputProps) {
 }
 
 export function NormalInput(props: HTMLProps<HTMLInputElement>) {
-  return <input {...props} type={"text"} className={"password-input"} />;
+  return <input {...props} type={"text"} className={"input"} />;
 }
 
 export function PasswordInput(props: HTMLProps<HTMLInputElement>) {

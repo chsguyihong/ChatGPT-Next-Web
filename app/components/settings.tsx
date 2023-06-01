@@ -483,7 +483,7 @@ export function Settings() {
           </ListItem>
         </List>
 
-        <List>
+        {/* <List>
           {enabledAccessControl ? (
             <ListItem
               title={Locale.Settings.AccessCode.Title}
@@ -541,7 +541,7 @@ export function Settings() {
               />
             )}
           </ListItem>
-        </List>
+        </List> */}
 
         <List>
           <ListItem
