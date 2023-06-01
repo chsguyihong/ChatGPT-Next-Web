@@ -8,6 +8,10 @@ import { ALL_MODELS } from "./config";
 export interface AccessControlStore {
   accessCode: string;
   token: string;
+  avatar: string;
+  nickName: string;
+  account: string;
+  password: string;
 
   needCode: boolean;
   hideUserApiKey: boolean;
@@ -15,6 +19,10 @@ export interface AccessControlStore {
 
   updateToken: (_: string) => void;
   updateCode: (_: string) => void;
+  updateAvatar: (_: string) => void;
+  updateNickName: (_: string) => void;
+  updateAccount: (_: string) => void;
+  updatePassword: (_: string) => void;
   enabledAccessControl: () => boolean;
   isAuthorized: () => boolean;
   fetch: () => void;
@@ -29,7 +37,11 @@ export const useAccessStore = create<AccessControlStore>()(
       accessCode: "",
       needCode: true,
       hideUserApiKey: false,
+      avatar: "1f603",
       openaiUrl: "/api/openai/",
+      nickName: "",
+      account: "",
+      password: "",
 
       enabledAccessControl() {
         get().fetch();
@@ -49,6 +61,18 @@ export const useAccessStore = create<AccessControlStore>()(
         return (
           !!get().token || !!get().accessCode || !get().enabledAccessControl()
         );
+      },
+      updateAvatar(avatar: string) {
+        set(() => ({ avatar }));
+      },
+      updateNickName(nickName: string) {
+        set(() => ({ nickName }));
+      },
+      updateAccount(account: string) {
+        set(() => ({ account }));
+      },
+      updatePassword(password: string) {
+        set(() => ({ password }));
       },
       fetch() {
         if (fetchState > 0) return;

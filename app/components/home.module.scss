@@ -381,6 +381,12 @@
 
 .chat-message-avatar {
   margin-top: 20px;
+  display: flex;
+  align-items: center;
+
+  .chat-message-nickName {
+    margin-right: 10px;
+  }
 }
 
 .chat-message-status {

@@ -223,6 +223,10 @@ export function Input(props: InputProps) {
   );
 }
 
+export function NormalInput(props: HTMLProps<HTMLInputElement>) {
+  return <input {...props} type={"text"} className={"password-input"} />;
+}
+
 export function PasswordInput(props: HTMLProps<HTMLInputElement>) {
   const [visible, setVisible] = useState(false);
 

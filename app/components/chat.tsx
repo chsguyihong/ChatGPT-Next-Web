@@ -760,8 +760,13 @@ export function Chat() {
               >
                 <div className={styles["chat-message-container"]}>
                   <div className={styles["chat-message-avatar"]}>
+                    {message.role === "user" && (
+                      <div className={styles["chat-message-nickName"]}>
+                        {accessStore.nickName}
+                      </div>
+                    )}
                     {message.role === "user" ? (
-                      <Avatar avatar={config.avatar} />
+                      <Avatar avatar={accessStore.avatar} />
                     ) : (
                       <MaskAvatar mask={session.mask} />
                     )}

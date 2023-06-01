@@ -245,6 +245,31 @@ const cn = {
     SubTitle: "现在开始，与面具背后的灵魂思维碰撞",
     More: "查看全部",
   },
+  Account: {
+    Avatar: "头像",
+    nickName: {
+      Title: "昵称",
+      Placeholder: "请输入昵称",
+    },
+    Account: {
+      Title: "账号",
+      Placeholder: "请输入账号",
+    },
+    Password: {
+      Title: "密码",
+      Placeholder: "请输入密码",
+    },
+    AccessCode: {
+      Title: "访问密码",
+      SubTitle: "管理员已开启加密访问",
+      Placeholder: "请输入访问密码",
+    },
+    Token: {
+      Title: "API Key",
+      SubTitle: "使用自己的 Key 可绕过密码访问限制",
+      Placeholder: "OpenAI API Key",
+    },
+  },
 
   UI: {
     Confirm: "确认",
