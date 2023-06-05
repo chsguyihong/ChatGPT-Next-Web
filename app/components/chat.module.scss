@@ -129,12 +129,10 @@
 
   animation: slide-in ease 0.3s;
 
-  $linear: linear-gradient(
-    to right,
+  $linear: linear-gradient(to right,
     rgba(0, 0, 0, 0),
     rgba(0, 0, 0, 1),
-    rgba(0, 0, 0, 0)
-  );
+    rgba(0, 0, 0, 0));
   mask-image: $linear;
 
   @mixin show {

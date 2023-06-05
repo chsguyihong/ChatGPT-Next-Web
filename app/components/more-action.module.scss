@@ -1,0 +1,45 @@
+.personal-center-popup {
+  background-color: black;
+
+  .personal-center-popup-items {
+    width: fit-content;
+    height: fit-content;
+    background-color: #ffffff;
+    position: absolute;
+    top: -30px;
+    right: -94px;
+    z-index: 6001;
+  }
+
+  .personal-center-popup-item {
+    width: fit-content;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    padding: 5px 20px;
+    cursor: pointer;
+
+    &:not(:last-of-type) {
+      border-bottom: 1px solid #f4f4f4;
+      // margin-bottom: 5px;
+    }
+
+    &:hover {
+      background-color: #f4f4f4;
+    }
+
+    .personal-center-popup-label {
+      margin: 0 0 0 10px;
+    }
+  }
+}
+
+.personal-center-popup-mask {
+  width: 0;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 6000;
+}

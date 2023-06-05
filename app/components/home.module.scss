@@ -195,12 +195,12 @@
   cursor: pointer;
 }
 
-.chat-item:hover > .chat-item-delete {
+.chat-item:hover>.chat-item-delete {
   opacity: 0.5;
   transform: translateX(-10px);
 }
 
-.chat-item:hover > .chat-item-delete:hover {
+.chat-item:hover>.chat-item-delete:hover {
   opacity: 1;
 }
 
@@ -221,10 +221,12 @@
 }
 
 .narrow-sidebar {
+
   .sidebar-title,
   .sidebar-sub-title {
     display: none;
   }
+
   .sidebar-logo {
     position: relative;
     display: flex;
@@ -290,7 +292,7 @@
     top: 15px;
   }
 
-  .chat-item:hover > .chat-item-delete {
+  .chat-item:hover>.chat-item-delete {
     opacity: 0.5;
     right: 5px;
   }
@@ -372,23 +374,38 @@
   &:hover {
     .chat-message-top-actions {
       opacity: 1;
-      right: 10px;
+      // right: 10px;
+      pointer-events: all;
+    }
+
+    .chat-message-actions {
+      opacity: 1;
       pointer-events: all;
     }
   }
-}
-
-.chat-message-user > .chat-message-container {
-  align-items: flex-end;
 }
 
 .chat-message-avatar {
   margin-top: 20px;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  flex-direction: row-reverse;
 
   .chat-message-nickName {
-    margin-right: 10px;
+    margin-left: 10px;
+  }
+}
+
+.chat-message-user>.chat-message-container {
+  align-items: flex-end;
+
+  .chat-message-avatar {
+    flex-direction: row;
+
+    .chat-message-nickName {
+      margin-right: 10px;
+    }
   }
 }
 
@@ -413,18 +430,22 @@
   position: relative;
 }
 
+.chat-message-right-actions {
+  position: absolute;
+  right: -35px;
+  bottom: 0;
+}
+
 .chat-message-top-actions {
   font-size: 12px;
   position: absolute;
-  right: 20px;
+  right: 0;
   top: -26px;
-  left: 100px;
   transition: all ease 0.3s;
   opacity: 0;
   pointer-events: none;
 
   display: flex;
-  flex-direction: row-reverse;
 
   .chat-message-top-action {
     opacity: 0.5;
@@ -437,22 +458,22 @@
     }
 
     &:not(:first-child) {
-      margin-right: 10px;
+      margin-left: 10px;
     }
   }
 }
 
-.chat-message-user > .chat-message-container > .chat-message-item {
+.chat-message-user>.chat-message-container>.chat-message-item {
   background-color: var(--second);
 }
 
 .chat-message-actions {
-  display: flex;
-  flex-direction: row-reverse;
-  width: 100%;
-  padding-top: 5px;
-  box-sizing: border-box;
+  width: fit-content;
+  flex: 1;
+  margin-left: 10px;
   font-size: 12px;
+  transition: all ease 0.3s;
+  opacity: 0;
 }
 
 .chat-message-action-date {
@@ -512,6 +533,7 @@
 
       @include single-line();
     }
+
     .hint-content {
       font-size: 12px;
 

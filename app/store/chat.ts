@@ -18,6 +18,9 @@ export type ChatMessage = RequestMessage & {
   isError?: boolean;
   id?: number;
   model?: ModelType;
+  isCollect?: boolean;
+  like?: number;
+  topic?: Array<{ label: string }>;
 };
 
 export function createMessage(override: Partial<ChatMessage>): ChatMessage {
@@ -246,6 +249,9 @@ export const useChatStore = create<ChatStore>()(
           streaming: true,
           id: userMessage.id! + 1,
           model: modelConfig.model,
+          isCollect: false,
+          like: 0,
+          topic: [],
         });
 
         const systemInfo = createMessage({

@@ -22,6 +22,14 @@ import AutoIcon from "../icons/auto.svg";
 import BottomIcon from "../icons/bottom.svg";
 import StopIcon from "../icons/pause.svg";
 
+import MsgCopyIcon from "../icons/msg-copy.svg";
+import MsgMoreIcon from "../icons/msg-more.svg";
+import MsgDeleteIcon from "../icons/msg-delete.svg";
+import MsgTopicIcon from "../icons/msg-topic.svg";
+import MsgColloctIcon from "../icons/msg-collect.svg";
+import MsgLikeIcon from "../icons/msg-like.svg";
+import MsgUnlikeIcon from "../icons/msg-unlike.svg";
+
 import {
   ChatMessage,
   SubmitKey,
@@ -61,6 +69,7 @@ import { useMaskStore } from "../store/mask";
 import { useCommand } from "../command";
 import { prettyObject } from "../utils/format";
 import { ExportMessageModal } from "./exporter";
+import { MoreActionPopup } from "./more-action";
 
 const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
   loading: () => <LoadingIcon />,
@@ -660,6 +669,18 @@ export function Chat() {
   const isChat = location.pathname === Path.Chat;
   const autoFocus = !isMobileScreen || isChat; // only focus in chat page
 
+  const [showMoreAction, setMoreAction] = useState(false);
+  const [activeItemId, setActiveItemId] = useState(-1);
+  const onShowAction = (id: any) => {
+    setActiveItemId(id);
+    setMoreAction(true);
+  };
+  const onHideAction = (actionId: any) => {
+    console.log(actionId);
+    setActiveItemId(-1);
+    setMoreAction(false);
+  };
+
   useCommand({
     fill: setUserInput,
     submit: (text) => {
@@ -759,12 +780,23 @@ export function Chat() {
                 }
               >
                 <div className={styles["chat-message-container"]}>
-                  <div className={styles["chat-message-avatar"]}>
-                    {message.role === "user" && (
-                      <div className={styles["chat-message-nickName"]}>
-                        {accessStore.nickName}
+                  <div
+                    className={`${styles["chat-message-avatar"]} ${
+                      message.role === "user"
+                        ? styles["chat-message-avatar-user"]
+                        : ""
+                    }`}
+                  >
+                    {!isUser && !message.preview && (
+                      <div className={styles["chat-message-actions"]}>
+                        <div className={styles["chat-message-action-date"]}>
+                          {message.date.toLocaleString()}
+                        </div>
                       </div>
                     )}
+                    <div className={styles["chat-message-nickName"]}>
+                      {accessStore.nickName}
+                    </div>
                     {message.role === "user" ? (
                       <Avatar avatar={accessStore.avatar} />
                     ) : (
@@ -779,36 +811,61 @@ export function Chat() {
                   <div className={styles["chat-message-item"]}>
                     {showActions && (
                       <div className={styles["chat-message-top-actions"]}>
-                        {message.streaming ? (
-                          <div
-                            className={styles["chat-message-top-action"]}
-                            onClick={() => onUserStop(message.id ?? i)}
-                          >
-                            {Locale.Chat.Actions.Stop}
-                          </div>
-                        ) : (
-                          <>
-                            <div
-                              className={styles["chat-message-top-action"]}
-                              onClick={() => onDelete(message.id ?? i)}
-                            >
-                              {Locale.Chat.Actions.Delete}
-                            </div>
-                            <div
-                              className={styles["chat-message-top-action"]}
-                              onClick={() => onResend(message.id ?? i)}
-                            >
-                              {Locale.Chat.Actions.Retry}
-                            </div>
-                          </>
-                        )}
-
                         <div
                           className={styles["chat-message-top-action"]}
                           onClick={() => copyToClipboard(message.content)}
                         >
-                          {Locale.Chat.Actions.Copy}
+                          <MsgCopyIcon />
                         </div>
+                        <div
+                          className={styles["chat-message-top-action"]}
+                          onClick={() => onShowAction(message.id)}
+                        >
+                          <MsgMoreIcon />
+                        </div>
+                      </div>
+                    )}
+                    {message.id == activeItemId && (
+                      <MoreActionPopup
+                        open={showMoreAction}
+                        onClose={(e) => onHideAction(e)}
+                        content={[
+                          {
+                            id: 1,
+                            icon: <MsgDeleteIcon />,
+                            label: "删除",
+                          },
+                          {
+                            id: 2,
+                            icon: <MsgColloctIcon />,
+                            label: "收藏",
+                          },
+                          {
+                            id: 3,
+                            icon: <MsgTopicIcon />,
+                            label: "话题",
+                          },
+                          {
+                            id: 4,
+                            icon: <MsgLikeIcon />,
+                            label: "点赞",
+                          },
+                          {
+                            id: 5,
+                            icon: <MsgUnlikeIcon />,
+                            label: "倒彩",
+                          },
+                        ]}
+                      ></MoreActionPopup>
+                    )}
+                    {message.role === "assistant" && i > 0 && (
+                      <div className={styles["chat-message-right-actions"]}>
+                        {message.like === 1 && (
+                          <span className="iconfont Ifdianzan1"></span>
+                        )}
+                        {message.like === 2 && (
+                          <span className="iconfont Ifsad-full"></span>
+                        )}
                       </div>
                     )}
                     <Markdown
@@ -827,13 +884,6 @@ export function Chat() {
                       defaultShow={i >= messages.length - 10}
                     />
                   </div>
-                  {!isUser && !message.preview && (
-                    <div className={styles["chat-message-actions"]}>
-                      <div className={styles["chat-message-action-date"]}>
-                        {message.date.toLocaleString()}
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
               {shouldShowClearContextDivider && <ClearContextDivider />}
