@@ -1,7 +1,7 @@
-.personal-center-popup {
+.more-action-popup {
   background-color: black;
 
-  .personal-center-popup-items {
+  .more-action-popup-items {
     width: fit-content;
     height: fit-content;
     background-color: #ffffff;
@@ -11,7 +11,7 @@
     z-index: 6001;
   }
 
-  .personal-center-popup-item {
+  .more-action-popup-item {
     width: fit-content;
     height: 30px;
     display: flex;
@@ -28,17 +28,17 @@
       background-color: #f4f4f4;
     }
 
-    .personal-center-popup-label {
+    .more-action-popup-label {
       margin: 0 0 0 10px;
     }
   }
 }
 
-.personal-center-popup-mask {
-  width: 0;
+.more-action-popup-mask {
+  width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  position: absolute;
+  background-color: rgba(0, 0, 0, 0);
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 6000;

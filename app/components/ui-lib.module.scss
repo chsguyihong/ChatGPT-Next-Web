@@ -207,7 +207,7 @@
 .select-with-icon {
   position: relative;
   max-width: fit-content;
-  
+
   .select-with-icon-select {
     height: 100%;
     border: var(--border-in-light);
@@ -226,5 +226,36 @@
     right: 10px;
     transform: translateY(-50%);
     pointer-events: none;
+  }
+}
+
+.tag {
+  border: 1px solid #d9d9d9;
+  display: flex;
+  width: fit-content;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 15px;
+  margin-top: 5px;
+  cursor: context-menu;
+
+  &.tag-dashed {
+    border-style: dashed;
+  }
+
+  &:not(:last-of-type) {
+    margin-right: 5px;
+  }
+
+  &:hover svg {
+    display: inline;
+  }
+
+  svg {
+    margin-left: 3px;
+    display: none;
+    cursor: pointer;
   }
 }

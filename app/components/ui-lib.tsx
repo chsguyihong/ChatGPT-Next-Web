@@ -266,3 +266,47 @@ export function Select(
     </div>
   );
 }
+
+export function Tag(
+  props: {
+    loading?: boolean;
+    text?: string;
+    color?: string;
+    background?: string;
+    border?: boolean;
+    closeable?: boolean;
+    deleteTag?: () => void;
+  } & React.DOMAttributes<HTMLDivElement>,
+) {
+  const { text, color, background, border, closeable, loading, deleteTag } =
+    props;
+  const inlineStyle = {
+    color,
+    background,
+    borderColor: border ? color : "transparent",
+  };
+  return loading ? (
+    <LoadingIcon />
+  ) : (
+    <span className={styles["tag"]} style={inlineStyle}>
+      {text ?? "请输入..."}
+      {closeable && (
+        <svg
+          viewBox="0 0 1024 1024"
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+          p-id="1694"
+          width="1em"
+          height="1em"
+          onClick={deleteTag}
+        >
+          <path
+            d="M544.448 499.2l284.576-284.576a32 32 0 0 0-45.248-45.248L499.2 453.952 214.624 169.376a32 32 0 0 0-45.248 45.248l284.576 284.576-284.576 284.576a32 32 0 0 0 45.248 45.248l284.576-284.576 284.576 284.576a31.904 31.904 0 0 0 45.248 0 32 32 0 0 0 0-45.248L544.448 499.2z"
+            fill={color ?? "#bfbfbf"}
+            p-id="1695"
+          ></path>
+        </svg>
+      )}
+    </span>
+  );
+}

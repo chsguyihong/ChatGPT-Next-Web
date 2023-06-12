@@ -20,7 +20,7 @@ export type ChatMessage = RequestMessage & {
   model?: ModelType;
   isCollect?: boolean;
   like?: number;
-  topic?: Array<{ label: string }>;
+  topicTags?: Array<{ id: number; text?: string }>;
 };
 
 export function createMessage(override: Partial<ChatMessage>): ChatMessage {
@@ -100,6 +100,7 @@ interface ChatStore {
   resetSession: () => void;
   getMessagesWithMemory: () => ChatMessage[];
   getMemoryPrompt: () => ChatMessage;
+  updateLike: (message: ChatMessage, liek: number) => void;
 
   clearAllData: () => void;
 }
@@ -251,7 +252,7 @@ export const useChatStore = create<ChatStore>()(
           model: modelConfig.model,
           isCollect: false,
           like: 0,
-          topic: [],
+          topicTags: [],
         });
 
         const systemInfo = createMessage({
@@ -523,6 +524,10 @@ export const useChatStore = create<ChatStore>()(
         const index = get().currentSessionIndex;
         updater(sessions[index]);
         set(() => ({ sessions }));
+      },
+
+      updateLike(message: ChatMessage, like: number) {
+        message.like = like;
       },
 
       clearAllData() {

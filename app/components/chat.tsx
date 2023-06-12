@@ -75,6 +75,10 @@ const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
   loading: () => <LoadingIcon />,
 });
 
+const Tag = dynamic(async () => (await import("./ui-lib")).Tag, {
+  loading: () => <LoadingIcon />,
+});
+
 export function SessionConfigModel(props: { onClose: () => void }) {
   const chatStore = useChatStore();
   const session = chatStore.currentSession();
@@ -671,15 +675,108 @@ export function Chat() {
 
   const [showMoreAction, setMoreAction] = useState(false);
   const [activeItemId, setActiveItemId] = useState(-1);
-  const onShowAction = (id: any) => {
-    setActiveItemId(id);
-    setMoreAction(true);
-  };
-  const onHideAction = (actionId: any) => {
-    console.log(actionId);
-    setActiveItemId(-1);
-    setMoreAction(false);
-  };
+  const [topic, setTopic] = useState([]);
+  const [showInput, setShowInput] = useState(false);
+  const [topicInput, setTopicInput] = useState("");
+
+  const onShowAction = (message: ChatMessage, i: number) => {
+      setActiveItemId(message.id ?? i);
+      setMoreAction(true);
+    },
+    onHideAction = (actionId: number, message: ChatMessage, i: number) => {
+      function likeUpdater(message?: ChatMessage | undefined): void {
+        if (message) message.like = actionId - 3;
+      }
+      switch (actionId) {
+        case 1:
+          onDelete(message.id ?? i);
+          break;
+        case 2:
+          onCollect(message.id ?? i, i);
+          break;
+        case 3:
+          onAddTag(i);
+          break;
+        case 4:
+        case 5:
+          chatStore.updateMessage(
+            chatStore.currentSessionIndex,
+            i - 1,
+            likeUpdater,
+          );
+          break;
+      }
+      setActiveItemId(-1);
+      setMoreAction(false);
+    },
+    onCollect = (messageId: number, i: number) => {
+      const userIndex = findLastUserIndex(messageId) ?? i;
+      const messages = [...session.messages];
+      console.log(messages.splice(userIndex, 2));
+    },
+    onAddTag = (i: number) => {
+      function updater(message?: ChatMessage | undefined): void {
+        message?.topicTags &&
+          message?.topicTags.push({
+            id: message.topicTags.length + 1,
+          });
+      }
+      chatStore.updateMessage(chatStore.currentSessionIndex, i - 1, updater);
+    },
+    onDeleteTag = (tagId: number, i: number) => {
+      function updater(message?: ChatMessage | undefined): void {
+        if (message?.topicTags)
+          message.topicTags = message.topicTags?.filter(
+            (tag) => tag.id !== tagId,
+          );
+      }
+      chatStore.updateMessage(chatStore.currentSessionIndex, i - 1, updater);
+    },
+    onCancelEval = (message: ChatMessage, i: number) => {
+      function updater(message?: ChatMessage | undefined): void {
+        if (message) message.like = 0;
+      }
+      chatStore.updateMessage(chatStore.currentSessionIndex, i - 1, updater);
+    },
+    onShowInput = () => {
+      setShowInput(true);
+    },
+    allowSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key !== "Enter") return false;
+      if (e.key === "Enter" && e.nativeEvent.isComposing) return false;
+      return (
+        (config.submitKey === SubmitKey.AltEnter && e.altKey) ||
+        (config.submitKey === SubmitKey.CtrlEnter && e.ctrlKey) ||
+        (config.submitKey === SubmitKey.ShiftEnter && e.shiftKey) ||
+        (config.submitKey === SubmitKey.MetaEnter && e.metaKey) ||
+        (config.submitKey === SubmitKey.Enter &&
+          !e.altKey &&
+          !e.ctrlKey &&
+          !e.shiftKey &&
+          !e.metaKey)
+      );
+    },
+    onTopicInputKeyDown = (
+      i: number,
+      e: React.KeyboardEvent<HTMLInputElement>,
+    ) => {
+      if (allowSubmit(e) && promptHints.length === 0) {
+        onSubmitTopic(i);
+        e.preventDefault();
+      }
+    },
+    onSubmitTopic = (i: number) => {
+      function updater(message?: ChatMessage | undefined): void {
+        message?.topicTags &&
+          message.topicTags.push({
+            id: message.topicTags.length + 1,
+            text: topicInput,
+          });
+      }
+      chatStore.updateMessage(chatStore.currentSessionIndex, i - 1, updater);
+      setShowInput(false);
+      setTopicInput("");
+    };
 
   useCommand({
     fill: setUserInput,
@@ -819,7 +916,7 @@ export function Chat() {
                         </div>
                         <div
                           className={styles["chat-message-top-action"]}
-                          onClick={() => onShowAction(message.id)}
+                          onClick={() => onShowAction(message, i)}
                         >
                           <MsgMoreIcon />
                         </div>
@@ -828,7 +925,7 @@ export function Chat() {
                     {message.id == activeItemId && (
                       <MoreActionPopup
                         open={showMoreAction}
-                        onClose={(e) => onHideAction(e)}
+                        onClose={(e) => onHideAction(e, message, i)}
                         content={[
                           {
                             id: 1,
@@ -859,13 +956,12 @@ export function Chat() {
                       ></MoreActionPopup>
                     )}
                     {message.role === "assistant" && i > 0 && (
-                      <div className={styles["chat-message-right-actions"]}>
-                        {message.like === 1 && (
-                          <span className="iconfont Ifdianzan1"></span>
-                        )}
-                        {message.like === 2 && (
-                          <span className="iconfont Ifsad-full"></span>
-                        )}
+                      <div
+                        className={styles["chat-message-right-actions"]}
+                        onClick={() => onCancelEval(message, i)}
+                      >
+                        {message.like === 1 && <MsgLikeIcon />}
+                        {message.like === 2 && <MsgUnlikeIcon />}
                       </div>
                     )}
                     <Markdown
@@ -883,6 +979,35 @@ export function Chat() {
                       parentRef={scrollRef}
                       defaultShow={i >= messages.length - 10}
                     />
+                    <div className={styles["chat-message-item-tags"]}>
+                      {i > 0 &&
+                        message.topicTags &&
+                        message.topicTags.map((tag) => (
+                          <Tag
+                            key={tag.id}
+                            text={tag.text}
+                            loading={
+                              message.preview || message.content.length === 0
+                            }
+                            closeable={true}
+                            border={false}
+                            color="#02A7F0"
+                            background="#E7F8FF"
+                            deleteTag={() => onDeleteTag(tag.id, i)}
+                          />
+                        ))}
+
+                      {i > 0 && activeItemId === message.id && showInput && (
+                        <input
+                          type="text"
+                          placeholder={"请输入"}
+                          onInput={(e) => setTopicInput(e.currentTarget.value)}
+                          value={topicInput}
+                          onKeyDown={(e) => onTopicInputKeyDown(i, e)}
+                          autoFocus={true}
+                        />
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
