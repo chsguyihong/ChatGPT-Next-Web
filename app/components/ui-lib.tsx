@@ -1,12 +1,17 @@
+/*
+ * @Date: 2023-05-24 09:53:33
+ * @LastEditTime: 2023-06-14 10:33:45
+ */
 import styles from "./ui-lib.module.scss";
 import LoadingIcon from "../icons/three-dots.svg";
 import CloseIcon from "../icons/close.svg";
 import EyeIcon from "../icons/eye.svg";
 import EyeOffIcon from "../icons/eye-off.svg";
 import DownIcon from "../icons/down.svg";
+import { SubmitKey, useAppConfig } from "../store";
 
 import { createRoot } from "react-dom/client";
-import React, { HTMLProps, useEffect, useState } from "react";
+import React, { HTMLProps, useEffect, useState, useRef } from "react";
 import { IconButton } from "./button";
 
 export function Popover(props: {
@@ -269,26 +274,52 @@ export function Select(
 
 export function Tag(
   props: {
-    loading?: boolean;
     text?: string;
     color?: string;
     background?: string;
+    loading?: boolean;
     border?: boolean;
     closeable?: boolean;
+    clickTag?: () => void;
     deleteTag?: () => void;
   } & React.DOMAttributes<HTMLDivElement>,
 ) {
-  const { text, color, background, border, closeable, loading, deleteTag } =
-    props;
-  const inlineStyle = {
+  const colorArr: Array<string> = ["#c41d7f", "#cf1322", "#d46b08", "#389e0d"],
+    borderColorArr: Array<string> = [
+      "#ffadd2",
+      "#ffa39e",
+      "#ffd591",
+      "#b7eb8f",
+    ],
+    backgroundColorArr: Array<string> = [
+      "#fff0f6",
+      "#fff1f0",
+      "#fff7e6",
+      "#f6ffed",
+    ],
+    random = () => {
+      return Math.floor(Math.random() * (colorArr.length + 1));
+    };
+  const {
+    text,
     color,
     background,
-    borderColor: border ? color : "transparent",
+    loading,
+    border,
+    closeable,
+    clickTag,
+    deleteTag,
+  } = props;
+  const inlineStyle = {
+    color: color ?? colorArr[random()],
+    background: background ?? backgroundColorArr[random()],
+    borderColor: !!border ? "transparent" : color ?? borderColorArr[random()],
   };
+
   return loading ? (
     <LoadingIcon />
   ) : (
-    <span className={styles["tag"]} style={inlineStyle}>
+    <span className={styles["tag"]} style={inlineStyle} onClick={clickTag}>
       {text ?? "请输入..."}
       {closeable && (
         <svg
@@ -308,5 +339,38 @@ export function Tag(
         </svg>
       )}
     </span>
+  );
+}
+
+export function TagInput(
+  props: {
+    text?: string;
+    keydown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+    onBlur: () => void;
+  } & React.DOMAttributes<HTMLDivElement>,
+) {
+  const { text, keydown, onBlur } = props;
+
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [inputValue, setInputValue] = useState("");
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+      console.log(text);
+      setInputValue(text ?? "");
+    }
+  }, [text]);
+
+  return (
+    <input
+      className={`${styles["tag"]} ${styles["input-tag"]}`}
+      ref={inputRef}
+      placeholder="请输入"
+      value={inputValue}
+      onInput={(e) => setInputValue(e.currentTarget.value)}
+      onBlur={onBlur}
+      onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => keydown(e)}
+    />
   );
 }

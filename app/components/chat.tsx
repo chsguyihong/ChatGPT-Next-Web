@@ -79,6 +79,10 @@ const Tag = dynamic(async () => (await import("./ui-lib")).Tag, {
   loading: () => <LoadingIcon />,
 });
 
+const TagInput = dynamic(async () => (await import("./ui-lib")).TagInput, {
+  loading: () => <LoadingIcon />,
+});
+
 export function SessionConfigModel(props: { onClose: () => void }) {
   const chatStore = useChatStore();
   const session = chatStore.currentSession();
@@ -675,9 +679,8 @@ export function Chat() {
 
   const [showMoreAction, setMoreAction] = useState(false);
   const [activeItemId, setActiveItemId] = useState(-1);
-  const [topic, setTopic] = useState([]);
-  const [showInput, setShowInput] = useState(false);
-  const [topicInput, setTopicInput] = useState("");
+  const [editingObj, setEditingObj] = useState({ id: -1, value: false });
+  const colorArr = ["#c41d7f", "#cf1322", "#d46b08", "#389e0d"];
 
   const onShowAction = (message: ChatMessage, i: number) => {
       setActiveItemId(message.id ?? i);
@@ -715,13 +718,12 @@ export function Chat() {
       console.log(messages.splice(userIndex, 2));
     },
     onAddTag = (i: number) => {
+      let id = Date.now() + Math.random();
       function updater(message?: ChatMessage | undefined): void {
-        message?.topicTags &&
-          message?.topicTags.push({
-            id: message.topicTags.length + 1,
-          });
+        message?.topicTags && message?.topicTags.push({ id });
       }
       chatStore.updateMessage(chatStore.currentSessionIndex, i - 1, updater);
+      setEditingObj({ id, value: true });
     },
     onDeleteTag = (tagId: number, i: number) => {
       function updater(message?: ChatMessage | undefined): void {
@@ -738,44 +740,27 @@ export function Chat() {
       }
       chatStore.updateMessage(chatStore.currentSessionIndex, i - 1, updater);
     },
-    onShowInput = () => {
-      setShowInput(true);
-    },
-    allowSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key !== "Enter") return false;
-      if (e.key === "Enter" && e.nativeEvent.isComposing) return false;
-      return (
-        (config.submitKey === SubmitKey.AltEnter && e.altKey) ||
-        (config.submitKey === SubmitKey.CtrlEnter && e.ctrlKey) ||
-        (config.submitKey === SubmitKey.ShiftEnter && e.shiftKey) ||
-        (config.submitKey === SubmitKey.MetaEnter && e.metaKey) ||
-        (config.submitKey === SubmitKey.Enter &&
-          !e.altKey &&
-          !e.ctrlKey &&
-          !e.shiftKey &&
-          !e.metaKey)
-      );
-    },
-    onTopicInputKeyDown = (
-      i: number,
+    onkeydown = (
+      text: string,
+      index: number,
       e: React.KeyboardEvent<HTMLInputElement>,
     ) => {
-      if (allowSubmit(e) && promptHints.length === 0) {
-        onSubmitTopic(i);
+      if (e.key === "Enter") {
+        function updater(message?: ChatMessage | undefined): void {
+          if (message?.topicTags) {
+            message.topicTags.filter((tag) => {
+              if (tag.id === editingObj.id) tag.text = text;
+            });
+            setEditingObj({ id: -1, value: false });
+          }
+        }
+        chatStore.updateMessage(
+          chatStore.currentSessionIndex,
+          index - 1,
+          updater,
+        );
         e.preventDefault();
       }
-    },
-    onSubmitTopic = (i: number) => {
-      function updater(message?: ChatMessage | undefined): void {
-        message?.topicTags &&
-          message.topicTags.push({
-            id: message.topicTags.length + 1,
-            text: topicInput,
-          });
-      }
-      chatStore.updateMessage(chatStore.currentSessionIndex, i - 1, updater);
-      setShowInput(false);
-      setTopicInput("");
     };
 
   useCommand({
@@ -982,31 +967,32 @@ export function Chat() {
                     <div className={styles["chat-message-item-tags"]}>
                       {i > 0 &&
                         message.topicTags &&
-                        message.topicTags.map((tag) => (
-                          <Tag
-                            key={tag.id}
-                            text={tag.text}
-                            loading={
-                              message.preview || message.content.length === 0
-                            }
-                            closeable={true}
-                            border={false}
-                            color="#02A7F0"
-                            background="#E7F8FF"
-                            deleteTag={() => onDeleteTag(tag.id, i)}
-                          />
-                        ))}
-
-                      {i > 0 && activeItemId === message.id && showInput && (
-                        <input
-                          type="text"
-                          placeholder={"请输入"}
-                          onInput={(e) => setTopicInput(e.currentTarget.value)}
-                          value={topicInput}
-                          onKeyDown={(e) => onTopicInputKeyDown(i, e)}
-                          autoFocus={true}
-                        />
-                      )}
+                        message.topicTags.map((tag, index) =>
+                          editingObj.id === tag.id && editingObj.value ? (
+                            <TagInput
+                              key={tag.id}
+                              text={tag.text}
+                              keydown={(e) =>
+                                onkeydown(e.currentTarget.value, i, e)
+                              }
+                              onBlur={() =>
+                                setEditingObj({ id: -1, value: false })
+                              }
+                            />
+                          ) : (
+                            <Tag
+                              key={tag.id}
+                              text={tag.text}
+                              closeable={true}
+                              color={colorArr[index % colorArr.length]}
+                              background={"transparent"}
+                              clickTag={() =>
+                                setEditingObj({ id: tag.id, value: true })
+                              }
+                              deleteTag={() => onDeleteTag(tag.id, i)}
+                            />
+                          ),
+                        )}
                     </div>
                   </div>
                 </div>
