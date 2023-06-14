@@ -12,6 +12,7 @@ export interface AccessControlStore {
   nickName: string;
   account: string;
   password: string;
+  email: string;
 
   needCode: boolean;
   hideUserApiKey: boolean;
@@ -23,6 +24,7 @@ export interface AccessControlStore {
   updateNickName: (_: string) => void;
   updateAccount: (_: string) => void;
   updatePassword: (_: string) => void;
+  updateEmail: (_: string) => void;
   enabledAccessControl: () => boolean;
   isAuthorized: () => boolean;
   fetch: () => void;
@@ -42,6 +44,7 @@ export const useAccessStore = create<AccessControlStore>()(
       nickName: "",
       account: "",
       password: "",
+      email: "",
 
       enabledAccessControl() {
         get().fetch();
@@ -73,6 +76,9 @@ export const useAccessStore = create<AccessControlStore>()(
       },
       updatePassword(password: string) {
         set(() => ({ password }));
+      },
+      updateEmail(email: string) {
+        set(() => ({ email }));
       },
       fetch() {
         if (fetchState > 0) return;

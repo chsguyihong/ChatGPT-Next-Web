@@ -259,6 +259,10 @@ const cn = {
       Title: "密码",
       Placeholder: "请输入密码",
     },
+    Email: {
+      Title: "邮箱",
+      Placeholder: "请输入邮箱",
+    },
     AccessCode: {
       Title: "访问密码",
       SubTitle: "管理员已开启加密访问",
@@ -269,6 +273,23 @@ const cn = {
       SubTitle: "使用自己的 Key 可绕过密码访问限制",
       Placeholder: "OpenAI API Key",
     },
+  },
+  Tag: {
+    emptyText: "#",
+    placeholder: "请输入...",
+  },
+  Login: {
+    loginTitle: "登录",
+    registerTitle: "注册",
+    account: { text: "账号", placeholder: "请输入账号" },
+    password: { text: "密码", placeholder: "请输入密码" },
+    phone: { text: "手机号码", placeholder: "请输入手机号码" },
+    code: { text: "验证码", placeholder: "请输入验证码" },
+    getCode: "获取验证码",
+    forgetPass: "忘记密码",
+    confirm: "确认",
+    register: "注册账号",
+    back: "返回",
   },
 
   UI: {

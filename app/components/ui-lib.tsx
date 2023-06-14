@@ -1,6 +1,6 @@
 /*
  * @Date: 2023-05-24 09:53:33
- * @LastEditTime: 2023-06-14 10:33:45
+ * @LastEditTime: 2023-06-14 16:09:04
  */
 import styles from "./ui-lib.module.scss";
 import LoadingIcon from "../icons/three-dots.svg";
@@ -12,10 +12,10 @@ import { SubmitKey, useAppConfig } from "../store";
 
 import { createRoot } from "react-dom/client";
 import React, { HTMLProps, useEffect, useState, useRef } from "react";
-import { IconButton } from "./button";
+import Locale from "../locales";
 
 export function Popover(props: {
-  children: JSX.Element;
+  children?: JSX.Element;
   content: JSX.Element;
   open?: boolean;
   onClose?: () => void;
@@ -229,7 +229,7 @@ export function Input(props: InputProps) {
 }
 
 export function NormalInput(props: HTMLProps<HTMLInputElement>) {
-  return <input {...props} type={"text"} className={"input"} />;
+  return <input {...props} type={"text"} className={"input input-text"} />;
 }
 
 export function PasswordInput(props: HTMLProps<HTMLInputElement>) {
@@ -241,11 +241,9 @@ export function PasswordInput(props: HTMLProps<HTMLInputElement>) {
 
   return (
     <div className={"password-input-container"}>
-      <IconButton
-        icon={visible ? <EyeIcon /> : <EyeOffIcon />}
-        onClick={changeVisibility}
-        className={"password-eye"}
-      />
+      <div className={styles["password-eye"]} onClick={changeVisibility}>
+        {visible ? <EyeIcon /> : <EyeOffIcon />}
+      </div>
       <input
         {...props}
         type={visible ? "text" : "password"}
@@ -320,7 +318,7 @@ export function Tag(
     <LoadingIcon />
   ) : (
     <span className={styles["tag"]} style={inlineStyle} onClick={clickTag}>
-      {text ?? "请输入..."}
+      {text ?? Locale.Tag.emptyText}
       {closeable && (
         <svg
           viewBox="0 0 1024 1024"
@@ -366,7 +364,7 @@ export function TagInput(
     <input
       className={`${styles["tag"]} ${styles["input-tag"]}`}
       ref={inputRef}
-      placeholder="请输入"
+      placeholder={Locale.Tag.placeholder}
       value={inputValue}
       onInput={(e) => setInputValue(e.currentTarget.value)}
       onBlur={onBlur}

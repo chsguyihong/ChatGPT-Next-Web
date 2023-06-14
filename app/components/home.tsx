@@ -3,6 +3,7 @@
 require("../polyfill");
 
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import styles from "./home.module.scss";
 
@@ -23,6 +24,7 @@ import {
 } from "react-router-dom";
 import { SideBar } from "./sidebar";
 import { useAppConfig } from "../store/config";
+import { useAccessStore } from "../store";
 
 export function Loading(props: { noLogo?: boolean }) {
   return (
@@ -58,6 +60,18 @@ const Balance = dynamic(async () => (await import("./balance")).Balance, {
 });
 
 const Collect = dynamic(async () => (await import("./collect")).Collect, {
+  loading: () => <Loading noLogo />,
+});
+
+const Login = dynamic(async () => (await import("./login")).Login, {
+  loading: () => <Loading noLogo />,
+});
+
+const ForgetPass = dynamic(async () => (await import("./login")).ForgetPass, {
+  loading: () => <Loading noLogo />,
+});
+
+const Register = dynamic(async () => (await import("./login")).Register, {
   loading: () => <Loading noLogo />,
 });
 
@@ -115,9 +129,12 @@ function Screen() {
   const location = useLocation();
   const isHome = location.pathname === Path.Home;
   const isMobileScreen = useMobileScreen();
+  const accessStore = useAccessStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadAsyncGoogleFont();
+    if (!accessStore.token) navigate(Path.Login);
   }, []);
 
   return (
@@ -131,20 +148,30 @@ function Screen() {
         }`
       }
     >
-      <SideBar className={isHome ? styles["sidebar-show"] : ""} />
+      {accessStore.token ? (
+        <>
+          <SideBar className={isHome ? styles["sidebar-show"] : ""} />
 
-      <div className={styles["window-content"]} id={SlotID.AppBody}>
+          <div className={styles["window-content"]} id={SlotID.AppBody}>
+            <Routes>
+              <Route path={Path.Home} element={<Chat />} />
+              <Route path={Path.NewChat} element={<NewChat />} />
+              <Route path={Path.Masks} element={<MaskPage />} />
+              <Route path={Path.Chat} element={<Chat />} />
+              <Route path={Path.Settings} element={<Settings />} />
+              <Route path={Path.Account} element={<Account />} />
+              <Route path={Path.Balance} element={<Balance />} />
+              <Route path={Path.Collect} element={<Collect />} />
+            </Routes>
+          </div>
+        </>
+      ) : (
         <Routes>
-          <Route path={Path.Home} element={<Chat />} />
-          <Route path={Path.NewChat} element={<NewChat />} />
-          <Route path={Path.Masks} element={<MaskPage />} />
-          <Route path={Path.Chat} element={<Chat />} />
-          <Route path={Path.Settings} element={<Settings />} />
-          <Route path={Path.Account} element={<Account />} />
-          <Route path={Path.Balance} element={<Balance />} />
-          <Route path={Path.Collect} element={<Collect />} />
+          <Route path={Path.Login} element={<Login />} />
+          <Route path={Path.ForgetPass} element={<ForgetPass />} />
+          <Route path={Path.Register} element={<Register />} />
         </Routes>
-      </div>
+      )}
     </div>
   );
 }

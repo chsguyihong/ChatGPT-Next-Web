@@ -1,6 +1,6 @@
 /*
  * @Date: 2023-05-25 14:26:17
- * @LastEditTime: 2023-06-01 11:03:02
+ * @LastEditTime: 2023-06-14 11:55:55
  */
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
@@ -102,6 +102,16 @@ export function Account(props: {}) {
               }}
             />
           </ListItem>
+          {/* 邮箱 */}
+          <ListItem title={Locale.Account.Email.Title}>
+            <NormalInput
+              value={accessStore.email}
+              placeholder={Locale.Account.Email.Placeholder}
+              onChange={(e) => {
+                accessStore.updateEmail(e.currentTarget.value);
+              }}
+            />
+          </ListItem>
           {/* 访问密码 */}
           {enabledAccessControl ? (
             <ListItem
@@ -121,7 +131,7 @@ export function Account(props: {}) {
             <></>
           )}
           {/* APIKey */}
-          {!accessStore.hideUserApiKey ? (
+          {/* {!accessStore.hideUserApiKey ? (
             <ListItem
               title={Locale.Account.Token.Title}
               subTitle={Locale.Account.Token.SubTitle}
@@ -135,7 +145,7 @@ export function Account(props: {}) {
                 }}
               />
             </ListItem>
-          ) : null}
+          ) : null} */}
         </List>
       </div>
     </ErrorBoundary>

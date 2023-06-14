@@ -229,6 +229,20 @@
   }
 }
 
+.password-eye {
+  width: 20px;
+  height: 80%;
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  transform: translateY(-50%);
+  padding-left: 5px;
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  cursor: pointer;
+}
+
 .tag {
   border: 1px solid;
   display: flex;
@@ -260,9 +274,9 @@
 .input-tag {
   width: 70px;
 
-  &:focus {
-    outline: unset;
-    border-color: #40a9ff;
-    box-shadow: -3px 0 0 rgba(209, 233, 255, 0.5), 0 -3px 0 rgba(209, 233, 255, 0.5), 0 3px 0 rgba(209, 233, 255, 0.5), 3px 0 0 rgba(209, 233, 255, 0.5);
-  }
+  // &:focus {
+  //   outline: unset;
+  //   border-color: #40a9ff;
+  //   box-shadow: -3px 0 0 rgba(209, 233, 255, 0.5), 0 -3px 0 rgba(209, 233, 255, 0.5), 0 3px 0 rgba(209, 233, 255, 0.5), 3px 0 0 rgba(209, 233, 255, 0.5);
+  // }
 }
