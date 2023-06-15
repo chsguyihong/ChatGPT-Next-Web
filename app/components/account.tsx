@@ -1,6 +1,6 @@
 /*
  * @Date: 2023-05-25 14:26:17
- * @LastEditTime: 2023-06-15 10:13:54
+ * @LastEditTime: 2023-06-15 14:05:37
  */
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
@@ -87,6 +87,7 @@ export function Account(props: {}) {
           <ListItem title={Locale.Account.Account.Title}>
             <div className={styles["input-box"]}>
               <NormalInput
+                disabled={true}
                 value={accessStore.account}
                 placeholder={Locale.Account.Account.Placeholder}
                 onChange={(e) => {

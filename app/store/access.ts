@@ -18,6 +18,7 @@ export interface AccessControlStore {
   hideUserApiKey: boolean;
   openaiUrl: string;
 
+  login: (account: string, password: string, callback: any) => void;
   updateToken: (_: string) => void;
   updateCode: (_: string) => void;
   updateAvatar: (_: string) => void;
@@ -46,6 +47,15 @@ export const useAccessStore = create<AccessControlStore>()(
       password: "",
       email: "",
 
+      login(account: string, password: string, callback: any) {
+        set((state) => ({
+          ...state,
+          account,
+          password,
+          token: "12138", // 更新token值
+        }));
+        callback();
+      },
       enabledAccessControl() {
         get().fetch();
 

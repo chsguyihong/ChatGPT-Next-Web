@@ -1,6 +1,6 @@
 /*
  * @Date: 2023-05-25 14:26:17
- * @LastEditTime: 2023-06-15 10:04:06
+ * @LastEditTime: 2023-06-15 14:08:31
  */
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +18,10 @@ import { useMobileScreen } from "../utils";
 
 export function Login(props: {}) {
   const navigate = useNavigate();
+  const accessStore = useAccessStore();
+
+  const [account, setAccount] = useState("");
+  const [password, setPassword] = useState("");
 
   return (
     <ErrorBoundary>
@@ -29,6 +33,10 @@ export function Login(props: {}) {
 
           <div className={styles["login-form-account"]}>
             <NormalInput
+              value={account}
+              onChange={(e) => {
+                setAccount(e.currentTarget.value);
+              }}
               placeholder={Locale.Login.account.placeholder}
               icon={
                 <svg
@@ -51,6 +59,10 @@ export function Login(props: {}) {
 
           <div className={styles["login-form-password"]}>
             <PasswordInput
+              value={password}
+              onChange={(e) => {
+                setPassword(e.currentTarget.value);
+              }}
               placeholder={Locale.Login.password.placeholder}
               icon={
                 <svg
@@ -71,7 +83,16 @@ export function Login(props: {}) {
             />
           </div>
 
-          <button className={styles["login-form-confirm"]}>
+          <button
+            className={styles["login-form-confirm"]}
+            onClick={() => {
+              account &&
+                password &&
+                accessStore.login(account, password, () => {
+                  navigate(Path.Home);
+                });
+            }}
+          >
             {Locale.Login.confirm}
           </button>
 

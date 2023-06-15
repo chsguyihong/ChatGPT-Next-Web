@@ -1,6 +1,6 @@
 /*
  * @Date: 2023-05-24 09:53:33
- * @LastEditTime: 2023-06-15 09:54:36
+ * @LastEditTime: 2023-06-15 14:07:24
  */
 import styles from "./ui-lib.module.scss";
 import LoadingIcon from "../icons/three-dots.svg";
@@ -375,7 +375,6 @@ export function TagInput(
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
-      console.log(text);
       setInputValue(text ?? "");
     }
   }, [text]);
