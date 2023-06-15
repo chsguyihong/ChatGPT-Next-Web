@@ -1,6 +1,6 @@
 /*
  * @Date: 2023-05-25 14:26:17
- * @LastEditTime: 2023-06-14 11:55:55
+ * @LastEditTime: 2023-06-15 10:13:54
  */
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
@@ -73,63 +73,73 @@ export function Account(props: {}) {
           </ListItem>
           {/* 昵称 */}
           <ListItem title={Locale.Account.nickName.Title}>
-            <NormalInput
-              value={accessStore.nickName}
-              placeholder={Locale.Account.nickName.Placeholder}
-              onChange={(e) => {
-                accessStore.updateNickName(e.currentTarget.value);
-              }}
-            />
+            <div className={styles["input-box"]}>
+              <NormalInput
+                value={accessStore.nickName}
+                placeholder={Locale.Account.nickName.Placeholder}
+                onChange={(e) => {
+                  accessStore.updateNickName(e.currentTarget.value);
+                }}
+              />
+            </div>
           </ListItem>
           {/* 账号 */}
           <ListItem title={Locale.Account.Account.Title}>
-            <NormalInput
-              value={accessStore.account}
-              placeholder={Locale.Account.Account.Placeholder}
-              onChange={(e) => {
-                accessStore.updateAccount(e.currentTarget.value);
-              }}
-            />
+            <div className={styles["input-box"]}>
+              <NormalInput
+                value={accessStore.account}
+                placeholder={Locale.Account.Account.Placeholder}
+                onChange={(e) => {
+                  accessStore.updateAccount(e.currentTarget.value);
+                }}
+              />
+            </div>
           </ListItem>
           {/* 密码 */}
           <ListItem title={Locale.Account.Password.Title}>
-            <PasswordInput
-              value={accessStore.password}
-              type="text"
-              placeholder={Locale.Account.Password.Placeholder}
-              onChange={(e) => {
-                accessStore.updatePassword(e.currentTarget.value);
-              }}
-            />
+            <div className={styles["input-box"]}>
+              <PasswordInput
+                value={accessStore.password}
+                type="text"
+                placeholder={Locale.Account.Password.Placeholder}
+                onChange={(e) => {
+                  accessStore.updatePassword(e.currentTarget.value);
+                }}
+              />
+            </div>
           </ListItem>
           {/* 邮箱 */}
           <ListItem title={Locale.Account.Email.Title}>
-            <NormalInput
-              value={accessStore.email}
-              placeholder={Locale.Account.Email.Placeholder}
-              onChange={(e) => {
-                accessStore.updateEmail(e.currentTarget.value);
-              }}
-            />
+            <div className={styles["input-box"]}>
+              <NormalInput
+                value={accessStore.email}
+                placeholder={Locale.Account.Email.Placeholder}
+                onChange={(e) => {
+                  accessStore.updateEmail(e.currentTarget.value);
+                }}
+              />
+            </div>
           </ListItem>
           {/* 访问密码 */}
-          {enabledAccessControl ? (
+          {/* {enabledAccessControl ? (
             <ListItem
               title={Locale.Account.AccessCode.Title}
               subTitle={Locale.Account.AccessCode.SubTitle}
             >
-              <PasswordInput
-                value={accessStore.accessCode}
-                type="text"
-                placeholder={Locale.Account.AccessCode.Placeholder}
-                onChange={(e) => {
-                  accessStore.updateCode(e.currentTarget.value);
-                }}
-              />
+              <div className={styles["input-box"]}>
+                <PasswordInput
+                  value={accessStore.accessCode}
+                  type="text"
+                  placeholder={Locale.Account.AccessCode.Placeholder}
+                  onChange={(e) => {
+                    accessStore.updateCode(e.currentTarget.value);
+                  }}
+                />
+              </div>
             </ListItem>
           ) : (
             <></>
-          )}
+          )} */}
           {/* APIKey */}
           {/* {!accessStore.hideUserApiKey ? (
             <ListItem

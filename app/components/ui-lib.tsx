@@ -1,6 +1,6 @@
 /*
  * @Date: 2023-05-24 09:53:33
- * @LastEditTime: 2023-06-14 16:09:04
+ * @LastEditTime: 2023-06-15 09:54:36
  */
 import styles from "./ui-lib.module.scss";
 import LoadingIcon from "../icons/three-dots.svg";
@@ -214,12 +214,12 @@ export function showToast(
   root.render(<Toast content={content} action={action} onClose={close} />);
 }
 
-export type InputProps = React.HTMLProps<HTMLTextAreaElement> & {
+export type textareaProps = React.HTMLProps<HTMLTextAreaElement> & {
   autoHeight?: boolean;
   rows?: number;
 };
 
-export function Input(props: InputProps) {
+export function Input(props: textareaProps) {
   return (
     <textarea
       {...props}
@@ -228,11 +228,30 @@ export function Input(props: InputProps) {
   );
 }
 
-export function NormalInput(props: HTMLProps<HTMLInputElement>) {
-  return <input {...props} type={"text"} className={"input input-text"} />;
+export type inputProps = React.HTMLProps<HTMLInputElement> & {
+  icon?: JSX.Element;
+};
+
+export function NormalInput(props: inputProps) {
+  const tempProps = { ...props };
+  const { icon } = props;
+  delete tempProps.icon;
+  return (
+    <div className={styles["input-container"]}>
+      {icon && <div className={styles["icon-box"]}>{icon}</div>}
+      <input
+        {...tempProps}
+        type={"text"}
+        className={icon ? styles["icon-input"] : undefined}
+      />
+    </div>
+  );
 }
 
-export function PasswordInput(props: HTMLProps<HTMLInputElement>) {
+export function PasswordInput(props: inputProps) {
+  const tempProps = { ...props };
+  const { icon } = props;
+  delete tempProps.icon;
   const [visible, setVisible] = useState(false);
 
   function changeVisibility() {
@@ -240,15 +259,16 @@ export function PasswordInput(props: HTMLProps<HTMLInputElement>) {
   }
 
   return (
-    <div className={"password-input-container"}>
+    <div className={styles["password-input-container"]}>
+      {icon && <div className={styles["icon-box"]}>{icon}</div>}
+      <input
+        {...tempProps}
+        type={visible ? "text" : "password"}
+        className={icon ? styles["icon-input"] : undefined}
+      />
       <div className={styles["password-eye"]} onClick={changeVisibility}>
         {visible ? <EyeIcon /> : <EyeOffIcon />}
       </div>
-      <input
-        {...props}
-        type={visible ? "text" : "password"}
-        className={"password-input"}
-      />
     </div>
   );
 }

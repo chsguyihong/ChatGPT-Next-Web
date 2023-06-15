@@ -184,7 +184,7 @@
       letter-spacing: 10px;
       margin-top: 20px;
 
-      &.forget-form-confirm:hover {
+      &:hover {
         box-shadow: -3px 0 0 rgba(209, 233, 255, 0.5), 0 -3px 0 rgba(209, 233, 255, 0.5), 0 3px 0 rgba(209, 233, 255, 0.5), 3px 0 0 rgba(209, 233, 255, 0.5);
       }
 
@@ -291,7 +291,7 @@
       letter-spacing: 10px;
       margin-top: 20px;
 
-      &.register-form-confirm:hover {
+      &:hover {
         box-shadow: -3px 0 0 rgba(209, 233, 255, 0.5), 0 -3px 0 rgba(209, 233, 255, 0.5), 0 3px 0 rgba(209, 233, 255, 0.5), 3px 0 0 rgba(209, 233, 255, 0.5);
       }
 
