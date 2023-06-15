@@ -869,6 +869,55 @@ export function Chat() {
                         : ""
                     }`}
                   >
+                    {!isUser && showActions && (
+                      <div className={styles["chat-message-top-actions"]}>
+                        <div
+                          className={styles["chat-message-top-action"]}
+                          onClick={() => copyToClipboard(message.content)}
+                        >
+                          <MsgCopyIcon />
+                        </div>
+                        <div
+                          className={styles["chat-message-top-action"]}
+                          onClick={() => onShowAction(message, i)}
+                        >
+                          <MsgMoreIcon />
+                        </div>
+                        {message.id == activeItemId && (
+                          <MoreActionPopup
+                            open={showMoreAction}
+                            onClose={(e) => onHideAction(e, message, i)}
+                            content={[
+                              {
+                                id: 1,
+                                icon: <MsgDeleteIcon />,
+                                label: "删除",
+                              },
+                              {
+                                id: 2,
+                                icon: <MsgColloctIcon />,
+                                label: "收藏",
+                              },
+                              {
+                                id: 3,
+                                icon: <MsgTopicIcon />,
+                                label: "话题",
+                              },
+                              {
+                                id: 4,
+                                icon: <MsgLikeIcon />,
+                                label: "点赞",
+                              },
+                              {
+                                id: 5,
+                                icon: <MsgUnlikeIcon />,
+                                label: "倒彩",
+                              },
+                            ]}
+                          ></MoreActionPopup>
+                        )}
+                      </div>
+                    )}
                     {!isUser && !message.preview && (
                       <div className={styles["chat-message-actions"]}>
                         <div className={styles["chat-message-action-date"]}>
@@ -891,55 +940,6 @@ export function Chat() {
                     </div>
                   )}
                   <div className={styles["chat-message-item"]}>
-                    {showActions && (
-                      <div className={styles["chat-message-top-actions"]}>
-                        <div
-                          className={styles["chat-message-top-action"]}
-                          onClick={() => copyToClipboard(message.content)}
-                        >
-                          <MsgCopyIcon />
-                        </div>
-                        <div
-                          className={styles["chat-message-top-action"]}
-                          onClick={() => onShowAction(message, i)}
-                        >
-                          <MsgMoreIcon />
-                        </div>
-                      </div>
-                    )}
-                    {message.id == activeItemId && (
-                      <MoreActionPopup
-                        open={showMoreAction}
-                        onClose={(e) => onHideAction(e, message, i)}
-                        content={[
-                          {
-                            id: 1,
-                            icon: <MsgDeleteIcon />,
-                            label: "删除",
-                          },
-                          {
-                            id: 2,
-                            icon: <MsgColloctIcon />,
-                            label: "收藏",
-                          },
-                          {
-                            id: 3,
-                            icon: <MsgTopicIcon />,
-                            label: "话题",
-                          },
-                          {
-                            id: 4,
-                            icon: <MsgLikeIcon />,
-                            label: "点赞",
-                          },
-                          {
-                            id: 5,
-                            icon: <MsgUnlikeIcon />,
-                            label: "倒彩",
-                          },
-                        ]}
-                      ></MoreActionPopup>
-                    )}
                     {message.role === "assistant" && i > 0 && (
                       <div
                         className={styles["chat-message-right-actions"]}

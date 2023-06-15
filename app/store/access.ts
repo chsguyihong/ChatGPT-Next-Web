@@ -52,7 +52,7 @@ export const useAccessStore = create<AccessControlStore>()(
           ...state,
           account,
           password,
-          token: "12138", // 更新token值
+          token: "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", // 更新token值
         }));
         callback();
       },

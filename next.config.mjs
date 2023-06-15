@@ -1,11 +1,15 @@
+/*
+ * @Date: 2023-05-24 09:53:33
+ * @LastEditTime: 2023-06-15 15:05:20
+ */
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
   async rewrites() {
     const ret = [
       {
-        source: "/api/proxy/:path*",
-        destination: "https://api.openai.com/:path*",
+        source: "/api/openai/:path*",
+        destination: "https://api.openai-proxy.com/:path*",
       },
       {
         source: "/google-fonts/:path*",
